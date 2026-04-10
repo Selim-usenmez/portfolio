@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, useInView, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion'
 import { projectsConfig } from '@/config/portfolio'
 
 function IconArrow() {
@@ -20,10 +20,49 @@ function IconGitHub() {
   )
 }
 
+function IconCopy() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+      <path d="M11 5V4C11 3.17 10.33 2.5 9.5 2.5H4C3.17 2.5 2.5 3.17 2.5 4V9.5C2.5 10.33 3.17 11 4 11H5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+/* ── Credentials block ──────────────────────────────────────── */
+function CredentialRow({ label, value }: { label: string; value: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(value).catch(() => {})
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3 py-1.5">
+      <span className="text-xs text-text-2 w-16 flex-shrink-0">{label}</span>
+      <span className="text-xs font-mono text-text-1 flex-1 truncate">{value}</span>
+      <button
+        onClick={copy}
+        className="flex-shrink-0 p-1 rounded hover:bg-white/10 transition-colors"
+        title="Copier"
+      >
+        {copied
+          ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          : <span className="text-text-2"><IconCopy /></span>
+        }
+      </button>
+    </div>
+  )
+}
+
+/* ── Project card ───────────────────────────────────────────── */
 function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const [isHovered, setIsHovered] = useState(false)
+  const [showCreds, setShowCreds] = useState(false)
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -53,10 +92,9 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
     >
       <motion.div
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-        className="relative glass rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500"
+        className="relative glass rounded-3xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-500 h-full"
       >
         <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-60`} />
-
         <motion.div
           animate={{ opacity: isHovered ? 1 : 0 }}
           transition={{ duration: 0.3 }}
@@ -64,7 +102,8 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
           style={{ background: `radial-gradient(circle at 50% 0%, ${project.accent}20 0%, transparent 60%)` }}
         />
 
-        <div className="relative p-8 md:p-10">
+        <div className="relative p-8 md:p-10 flex flex-col h-full">
+          {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <span className="text-xs tracking-widest uppercase mb-2 block font-medium" style={{ color: project.accent }}>
@@ -77,6 +116,7 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
             </span>
           </div>
 
+          {/* Description */}
           <p className="text-text-2 text-sm md:text-base leading-relaxed mb-6">{project.description}</p>
 
           {/* Compétence badge */}
@@ -86,11 +126,12 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
               style={{ background: `${project.accent}15`, color: project.accent, border: `1px solid ${project.accent}30` }}
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: project.accent }} />
-              Compétence : {project.competence}
+              {project.competence}
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-8">
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-6">
             {project.tags.map((tag) => (
               <span key={tag} className="px-3 py-1 rounded-full text-xs border" style={{ borderColor: `${project.accent}30`, color: project.accent }}>
                 {tag}
@@ -98,16 +139,74 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
             ))}
           </div>
 
-          <div className="flex items-center gap-4">
-            <a
-              href={project.preuve}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm font-medium text-text-1 hover:text-white transition-colors"
-            >
-              Voir la preuve <IconArrow />
-            </a>
-            {project.github !== '#' && (
+          {/* Demo credentials (expandable) */}
+          {project.demo && (
+            <div className="mb-6">
+              <button
+                onClick={() => setShowCreds(!showCreds)}
+                className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border transition-all duration-200"
+                style={{ borderColor: `${project.accent}30`, color: project.accent, background: `${project.accent}08` }}
+              >
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2"/>
+                  <rect x="5.5" y="7" width="5" height="4" rx="1" stroke="currentColor" strokeWidth="1.1"/>
+                  <path d="M6.5 7V5.5a1.5 1.5 0 0 1 3 0V7" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round"/>
+                </svg>
+                Accès démo invité
+                <motion.span animate={{ rotate: showCreds ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </motion.span>
+              </button>
+
+              <AnimatePresence>
+                {showCreds && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-2 px-3 py-2 rounded-xl border border-white/7 bg-white/[0.02]">
+                      {project.demo.credentials.map((c, i) => (
+                        <div key={i} className={i > 0 ? 'border-t border-white/5 mt-1 pt-1' : ''}>
+                          <div className="text-xs text-accent mb-1 font-medium">{c.role}</div>
+                          <CredentialRow label="Login" value={c.login} />
+                          <CredentialRow label="Mot de passe" value={c.password} />
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Links */}
+          <div className="flex items-center gap-4 mt-auto">
+            {project.demo?.url && (
+              <a
+                href={project.demo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 text-sm font-medium text-text-1 hover:text-white transition-colors"
+              >
+                Voir le projet <IconArrow />
+              </a>
+            )}
+            {project.preuve && (
+              <a
+                href={project.preuve}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 text-sm font-medium text-text-1 hover:text-white transition-colors"
+              >
+                Voir la preuve <IconArrow />
+              </a>
+            )}
+            {project.github && project.github !== '#' && (
               <a
                 href={project.github}
                 target="_blank"
