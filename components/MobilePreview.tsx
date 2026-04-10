@@ -8,9 +8,13 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 // et renseigne les chemins ci-dessous.
 // Si vide, le placeholder animé s'affiche.
 const SCREENSHOTS: string[] = [
-  // '/assets/screenshots/nexussport-1.png',
-  // '/assets/screenshots/nexussport-2.png',
-  // '/assets/screenshots/nexussport-3.png',
+  '/assets/screenshots/IMG_2582.jpg',
+  '/assets/screenshots/IMG_2584.jpg',
+  '/assets/screenshots/IMG_2586.jpg',
+  '/assets/screenshots/IMG_2587.jpg',
+  '/assets/screenshots/IMG_2588.jpg',
+  '/assets/screenshots/IMG_2589.jpg',
+  '/assets/screenshots/IMG_2590.jpg',
 ]
 
 /* ── Placeholder UI (tant qu'il n'y a pas de screenshots) ─────── */
