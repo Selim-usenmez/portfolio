@@ -184,8 +184,26 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
             </div>
           )}
 
+          {/* Mobile badge */}
+          {'mobile' in project && project.mobile && (
+            <div className="mb-5 flex items-center gap-2">
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+                style={{ background: `${project.accent}15`, color: project.accent, border: `1px solid ${project.accent}30` }}
+              >
+                <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
+                  <rect x="0.75" y="0.75" width="9.5" height="11.5" rx="1.75" stroke="currentColor" strokeWidth="1.2"/>
+                  <circle cx="5.5" cy="10" r="0.75" fill="currentColor"/>
+                  <line x1="3.5" y1="1.5" x2="7.5" y2="1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                </svg>
+                {project.mobile.platform} Native
+              </span>
+              <span className="text-xs text-text-2">Swift + Supabase</span>
+            </div>
+          )}
+
           {/* Links */}
-          <div className="flex items-center gap-4 mt-auto">
+          <div className="flex flex-wrap items-center gap-4 mt-auto">
             {project.demo?.url && (
               <a
                 href={project.demo.url}
@@ -195,6 +213,31 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
               >
                 Voir le projet <IconArrow />
               </a>
+            )}
+            {'mobile' in project && project.mobile?.testflight && (
+              <a
+                href={project.mobile.testflight}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full transition-colors"
+                style={{ background: `${project.accent}15`, color: project.accent, border: `1px solid ${project.accent}30` }}
+              >
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 1v9M8 10l-3-3M8 10l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 13h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                TestFlight
+              </a>
+            )}
+            {'mobile' in project && project.mobile && !project.mobile.testflight && (
+              <span className="text-xs text-text-2 italic flex items-center gap-1.5">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <circle cx="6" cy="6" r="5.25" stroke="currentColor" strokeWidth="1"/>
+                  <path d="M6 4v2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                  <circle cx="6" cy="8.5" r="0.6" fill="currentColor"/>
+                </svg>
+                TestFlight bientôt disponible
+              </span>
             )}
             {project.preuve && (
               <a

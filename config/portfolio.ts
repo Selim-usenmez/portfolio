@@ -197,6 +197,23 @@ export const projectsConfig = [
   },
   {
     id: 4,
+    title: 'NexusSport',
+    subtitle: 'Client Mobile — PPE2',
+    description: 'Application iOS native développée en Swift. Gestion sportive connectée avec authentification, suivi des performances et données en temps réel via Supabase.',
+    tags: ['Swift', 'iOS', 'Supabase', 'Xcode', 'TestFlight'],
+    color: 'from-orange-500/20 to-amber-500/20',
+    accent: '#fb923c',
+    preuve: null,
+    github: 'https://github.com/Selim-usenmez/PPE_Client_Mobile',
+    demo: null,
+    mobile: {
+      platform: 'iOS',
+      testflight: null, // Ajoute ton lien TestFlight ici quand disponible
+    },
+    competence: 'Développement Mobile',
+  },
+  {
+    id: 5,
     title: 'Installation Fibre Optique',
     subtitle: 'Stage — ABD Réseaux, Vénissieux',
     description: 'Raccordement et dépannage fibre optique en milieu professionnel chez ABD Réseaux. Installation chez les particuliers, gestion des incidents réseau.',
