@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Syne } from 'next/font/google'
 import './globals.css'
 import CustomCursor from '@/components/CustomCursor'
+import MouseGlow from '@/components/MouseGlow'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="fr" className={`${inter.variable} ${syne.variable}`}>
       <body>
         <CustomCursor />
+        <MouseGlow />
         {children}
       </body>
     </html>

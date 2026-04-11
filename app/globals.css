@@ -98,6 +98,28 @@ body::before {
   background-clip: text;
 }
 
+/* ─── Shimmer sur les grands titres de section ── */
+.gradient-text-shimmer {
+  background: linear-gradient(120deg, #818cf8 0%, #c084fc 30%, #e0e7ff 50%, #c084fc 70%, #22d3ee 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-move 5s linear infinite;
+}
+
+@keyframes shimmer-move {
+  0%   { background-position: 0% center; }
+  100% { background-position: 250% center; }
+}
+
+/* ─── Pulse ring ─────────────────────────────── */
+@keyframes ping-ring {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.ping-ring { animation: ping-ring 2s ease-out infinite; }
+
 .gradient-text-warm {
   background: linear-gradient(135deg, #f472b6 0%, #c084fc 50%, #818cf8 100%);
   -webkit-background-clip: text;

@@ -116,9 +116,9 @@ export default function About() {
               {aboutConfig.stats.map((stat, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+                  initial={{ opacity: 0, scale: 0.65 }}
+                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.55, delay: 0.3 + i * 0.1, ease: [0.34, 1.56, 0.64, 1] }}
                   className="glass rounded-2xl p-4 border border-white/5 hover:border-accent/20 transition-colors duration-300 group text-center"
                 >
                   <div className="font-display font-bold text-2xl gradient-text mb-1">
@@ -185,7 +185,13 @@ export default function About() {
                   className="space-y-4"
                 >
                   {aboutConfig.formations.map((f, i) => (
-                    <div key={i} className="glass rounded-2xl p-5 border border-white/5 hover:border-accent/15 transition-colors duration-300 group">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -24, scale: 0.96 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      transition={{ duration: 0.4, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      className="glass rounded-2xl p-5 border border-white/5 hover:border-accent/15 transition-colors duration-300 group"
+                    >
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div>
                           <div className="font-medium text-text-1 group-hover:text-white transition-colors">{f.diplome}</div>
@@ -198,7 +204,7 @@ export default function About() {
                           )}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </motion.div>
               )}
@@ -213,7 +219,13 @@ export default function About() {
                   className="space-y-4"
                 >
                   {aboutConfig.experiences.map((e, i) => (
-                    <div key={i} className="glass rounded-2xl p-5 border border-white/5 hover:border-white/10 transition-colors duration-300 group">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -24, scale: 0.96 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      transition={{ duration: 0.4, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                      className="glass rounded-2xl p-5 border border-white/5 hover:border-white/10 transition-colors duration-300 group"
+                    >
                       <div className={`inline-block w-2 h-2 rounded-full mb-2 bg-gradient-to-br ${e.color}`} />
                       <div className="text-xs text-text-2 mb-1">{e.periode}</div>
                       <div className="font-medium text-text-1 group-hover:text-white transition-colors mb-2">{e.poste}</div>
@@ -225,7 +237,7 @@ export default function About() {
                           </li>
                         ))}
                       </ul>
-                    </div>
+                    </motion.div>
                   ))}
                 </motion.div>
               )}

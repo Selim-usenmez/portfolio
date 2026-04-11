@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence, useScroll } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion'
 import { siteConfig } from '@/config/portfolio'
 
 const navLinks = [
@@ -15,7 +15,8 @@ const navLinks = [
 export default function Navigation() {
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const { scrollY } = useScroll()
+  const { scrollY, scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
 
   useEffect(() => {
     return scrollY.on('change', (val) => {
@@ -31,6 +32,15 @@ export default function Navigation() {
 
   return (
     <>
+      {/* Barre de progression scroll */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-px z-[60] origin-left"
+        style={{
+          scaleX,
+          background: 'linear-gradient(90deg, #818cf8, #c084fc, #22d3ee)',
+        }}
+      />
+
       <motion.header
         initial={{ y: -80, opacity: 0 }}
         animate={visible ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}

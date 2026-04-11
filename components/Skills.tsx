@@ -34,8 +34,8 @@ function SkillCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group relative glass rounded-3xl p-7 border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
     >
@@ -46,7 +46,14 @@ function SkillCard({
 
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <span className="text-xl">{category.icon}</span>
+        <motion.span
+          className="text-xl inline-block"
+          initial={{ scale: 0, rotate: -20 }}
+          animate={inView ? { scale: 1, rotate: 0 } : {}}
+          transition={{ type: 'spring', stiffness: 400, damping: 12, delay: index * 0.1 + 0.15 }}
+        >
+          {category.icon}
+        </motion.span>
         <h3 className={`font-display font-bold text-sm tracking-widest uppercase bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}>
           {category.name}
         </h3>
@@ -102,7 +109,7 @@ export default function Skills() {
               className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-text-1 leading-tight"
             >
               Mon{' '}
-              <span className="gradient-text-warm">stack</span>
+              <span className="gradient-text-shimmer">stack</span>
               {' '}technique
             </motion.h2>
           </div>

@@ -315,8 +315,8 @@ export default function MobilePreview() {
           {/* ── Right: iPhone mockup ────────────────────────── */}
           <div className="flex justify-center lg:justify-end">
             <motion.div
-              initial={{ opacity: 0, y: 60, rotate: -3 }}
-              animate={inView ? { opacity: 1, y: 0, rotate: 0 } : {}}
+              initial={{ opacity: 0, y: 40, scale: 0.82, rotate: -3 }}
+              animate={inView ? { opacity: 1, y: 0, scale: 1, rotate: 0 } : {}}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <motion.div

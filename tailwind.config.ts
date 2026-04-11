@@ -28,6 +28,7 @@ const config: Config = {
         'aurora-3': 'aurora3 18s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'marquee': 'marquee 22s linear infinite',
       },
       keyframes: {
         aurora1: {
@@ -48,6 +49,10 @@ const config: Config = {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-12px)' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },

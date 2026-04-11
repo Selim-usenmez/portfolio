@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { siteConfig, socialLinks } from '@/config/portfolio'
 
@@ -78,6 +78,183 @@ function MagneticSocial({
   )
 }
 
+/* ── Contact form ───────────────────────────────────────────── */
+type FormStatus = 'idle' | 'sending' | 'success' | 'error'
+
+function Field({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-xs font-medium text-text-2 uppercase tracking-wider pl-1">
+        {label}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+function ContactForm() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [status, setStatus] = useState<FormStatus>('idle')
+  // Anti-bot: timestamp de chargement du formulaire
+  const [loadedAt, setLoadedAt] = useState<number>(0)
+
+  useEffect(() => {
+    setLoadedAt(Date.now())
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('sending')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          website: '', // honeypot — doit rester vide
+          _t: loadedAt,
+        }),
+      })
+
+      if (res.ok) {
+        setStatus('success')
+        setName('')
+        setEmail('')
+        setMessage('')
+        setTimeout(() => setStatus('idle'), 5000)
+      } else {
+        setStatus('error')
+        setTimeout(() => setStatus('idle'), 4000)
+      }
+    } catch {
+      setStatus('error')
+      setTimeout(() => setStatus('idle'), 4000)
+    }
+  }
+
+  const inputBase =
+    'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-text-1 placeholder-text-2/30 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/10 transition-all duration-200'
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto mt-10">
+      {/* Carte glass */}
+      <div className="glass rounded-2xl border border-white/5 p-6 sm:p-8 space-y-5 shadow-xl shadow-black/20">
+
+        {/* Champ honeypot — invisible pour les humains, les bots le remplissent */}
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          style={{ position: 'absolute', opacity: 0, height: 0, width: 0, pointerEvents: 'none' }}
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Field label="Nom">
+            <input
+              type="text"
+              placeholder="Selim Usenmez"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              maxLength={100}
+              className={inputBase}
+            />
+          </Field>
+          <Field label="Email">
+            <input
+              type="email"
+              placeholder="toi@exemple.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              maxLength={200}
+              className={inputBase}
+            />
+          </Field>
+        </div>
+
+        <Field label={`Message${message.length > 0 ? ` — ${message.length}/2000` : ''}`}>
+          <textarea
+            placeholder="Dis-moi tout…"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            required
+            maxLength={2000}
+            rows={5}
+            className={`${inputBase} resize-none`}
+          />
+        </Field>
+
+        <button
+          type="submit"
+          disabled={status === 'sending'}
+          className="group w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 bg-accent/15 border border-accent/25 text-accent hover:bg-accent/25 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          {status === 'sending' ? (
+            <>
+              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+              </svg>
+              Envoi en cours…
+            </>
+          ) : (
+            <>
+              Envoyer le message
+              <svg
+                className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                viewBox="0 0 16 16" fill="none"
+              >
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </>
+          )}
+        </button>
+
+        {status === 'success' && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm"
+          >
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Message envoyé ! Je te répondrai très bientôt.
+          </motion.div>
+        )}
+        {status === 'error' && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm"
+          >
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="none">
+              <path d="M8 5v4M8 11h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.2"/>
+            </svg>
+            Erreur lors de l&apos;envoi. Réessaie ou écris-moi directement.
+          </motion.div>
+        )}
+      </div>
+    </form>
+  )
+}
+
+/* ── Section principale ─────────────────────────────────────── */
 export default function Contact() {
   const sectionRef = useRef(null)
   const inView = useInView(sectionRef, { once: true, margin: '-100px' })
@@ -127,7 +304,7 @@ export default function Contact() {
           >
             Parlons
             {' '}
-            <span className="gradient-text">ensemble</span>
+            <span className="gradient-text-shimmer">ensemble</span>
           </motion.h2>
         </div>
 
@@ -174,15 +351,36 @@ export default function Contact() {
           </div>
         </motion.div>
 
+        {/* Contact form */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <ContactForm />
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.4, delay: 0.7 }}
+          className="flex items-center gap-4 my-10 max-w-xl mx-auto"
+        >
+          <span className="flex-1 h-px bg-white/5" />
+          <span className="text-xs text-text-2/40 uppercase tracking-widest">ou</span>
+          <span className="flex-1 h-px bg-white/5" />
+        </motion.div>
+
         {/* Social links */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.75 }}
           className="flex flex-wrap items-center justify-center gap-3"
         >
           {socialLinks.map((link, i) => (
-            <MagneticSocial key={link.name} link={link} delay={0.55 + i * 0.08} />
+            <MagneticSocial key={link.name} link={link} delay={0.8 + i * 0.08} />
           ))}
         </motion.div>
       </div>

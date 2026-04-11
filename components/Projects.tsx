@@ -82,8 +82,8 @@ function ProjectCard({ project, index }: { project: (typeof projectsConfig)[0]; 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 60 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      initial={{ opacity: 0, y: 40, scale: 0.88 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{ duration: 0.7, delay: index * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
       style={{ perspective: '1000px' }}
       onMouseMove={onMouseMove}
@@ -305,7 +305,7 @@ export default function Projects() {
               className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-text-1 leading-tight"
             >
               Réalisations{' '}
-              <span className="gradient-text">concrètes</span>
+              <span className="gradient-text-shimmer">concrètes</span>
             </motion.h2>
           </div>
           <motion.p

@@ -13,7 +13,7 @@ export const siteConfig = {
     'Futur Ingénieur IA',
   ],
   tagline: 'Passionné par le développement et les nouvelles technologies, je vise à devenir ingénieur en intelligence artificielle.',
-  email: 'selim.usenmez@gmail.com',
+  email: 'usenmezselim@gmail.com',
   location: 'Lyon, France',
   school: 'Institution Les Chartreux, Lyon',
   availableForWork: true,
