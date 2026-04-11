@@ -191,3 +191,60 @@ body::before {
     display: none;
   }
 }
+
+/* ─── Mode CV / Print ────────────────────────── */
+@media print {
+  /* Reset couleurs pour impression */
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    cursor: auto !important;
+  }
+
+  /* Masquer tout ce qui est décoratif */
+  .cursor-dot, .cursor-ring,
+  header, nav,
+  [class*="aurora"], [class*="dot-grid"],
+  [class*="OrbitalRings"], [class*="TechBanner"],
+  [class*="MobilePreview"], [class*="TableauSynthese"],
+  [class*="Contact"], [class*="Footer"],
+  canvas, video,
+  button:not(.cv-keep) {
+    display: none !important;
+  }
+
+  /* Sections principales visibles */
+  section {
+    break-inside: avoid;
+    padding: 1.5rem 0 !important;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* Titres lisibles */
+  h1, h2, h3 {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+  }
+
+  /* Texte lisible */
+  p, span, li, div {
+    color: #333 !important;
+  }
+
+  /* Cards sans glass */
+  .glass {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Progress bars visibles */
+  [class*="gradient-to"] {
+    background: #6366f1 !important;
+  }
+
+  /* Marges page */
+  @page {
+    margin: 1.5cm;
+  }
+}

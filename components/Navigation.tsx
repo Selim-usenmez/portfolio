@@ -12,22 +12,41 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ]
 
+const SECTION_IDS = ['about', 'skills', 'projects', 'tableau', 'contact']
+
 export default function Navigation() {
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('')
   const { scrollY, scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 })
 
   useEffect(() => {
-    return scrollY.on('change', (val) => {
-      setVisible(val > 80)
-    })
+    return scrollY.on('change', (val) => setVisible(val > 80))
   }, [scrollY])
+
+  /* ── Active section via IntersectionObserver ──────────────── */
+  useEffect(() => {
+    const observers: IntersectionObserver[] = []
+
+    SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id) },
+        { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+
+    return () => observers.forEach((o) => o.disconnect())
+  }, [])
 
   const handleNav = (href: string) => {
     setMenuOpen(false)
-    const el = document.querySelector(href)
-    el?.scrollIntoView({ behavior: 'smooth' })
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -35,10 +54,7 @@ export default function Navigation() {
       {/* Barre de progression scroll */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-px z-[60] origin-left"
-        style={{
-          scaleX,
-          background: 'linear-gradient(90deg, #818cf8, #c084fc, #22d3ee)',
-        }}
+        style={{ scaleX, background: 'linear-gradient(90deg, #818cf8, #c084fc, #22d3ee)' }}
       />
 
       <motion.header
@@ -48,7 +64,7 @@ export default function Navigation() {
         className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-3xl"
       >
         <div className="glass rounded-2xl px-6 py-3 flex items-center justify-between">
-          {/* Logo / Name */}
+          {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="font-display font-bold text-sm tracking-widest uppercase gradient-text"
@@ -58,15 +74,29 @@ export default function Navigation() {
 
           {/* Desktop links */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNav(link.href)}
-                className="text-sm text-text-2 hover:text-text-1 transition-colors duration-200 link-underline"
-              >
-                {link.label}
-              </button>
-            ))}
+            {navLinks.map((link) => {
+              const id = link.href.replace('#', '')
+              const isActive = activeSection === id
+              return (
+                <button
+                  key={link.href}
+                  onClick={() => handleNav(link.href)}
+                  className="relative text-sm transition-colors duration-200 py-1"
+                  style={{ color: isActive ? '#f1f5f9' : '#64748b' }}
+                >
+                  {link.label}
+                  {/* Underline active */}
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute -bottom-0.5 left-0 right-0 h-px rounded-full"
+                    style={{ background: 'linear-gradient(90deg, #818cf8, #c084fc)' }}
+                    initial={false}
+                    animate={{ opacity: isActive ? 1 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </button>
+              )
+            })}
           </nav>
 
           {/* CTA */}
@@ -84,18 +114,9 @@ export default function Navigation() {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menu"
           >
-            <motion.span
-              animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-px bg-text-1 origin-center transition-all"
-            />
-            <motion.span
-              animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="block w-5 h-px bg-text-1"
-            />
-            <motion.span
-              animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-px bg-text-1 origin-center transition-all"
-            />
+            <motion.span animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }} className="block w-5 h-px bg-text-1 origin-center transition-all" />
+            <motion.span animate={menuOpen ? { opacity: 0 } : { opacity: 1 }} className="block w-5 h-px bg-text-1" />
+            <motion.span animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }} className="block w-5 h-px bg-text-1 origin-center transition-all" />
           </button>
         </div>
       </motion.header>
@@ -111,18 +132,21 @@ export default function Navigation() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-bg/95 backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
-                <motion.button
-                  key={link.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07 }}
-                  onClick={() => handleNav(link.href)}
-                  className="font-display text-3xl font-bold gradient-text"
-                >
-                  {link.label}
-                </motion.button>
-              ))}
+              {navLinks.map((link, i) => {
+                const isActive = activeSection === link.href.replace('#', '')
+                return (
+                  <motion.button
+                    key={link.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.07 }}
+                    onClick={() => handleNav(link.href)}
+                    className={`font-display text-3xl font-bold transition-colors duration-200 ${isActive ? 'gradient-text' : 'text-text-2'}`}
+                  >
+                    {link.label}
+                  </motion.button>
+                )
+              })}
             </nav>
           </motion.div>
         )}

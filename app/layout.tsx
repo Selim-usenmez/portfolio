@@ -3,6 +3,7 @@ import { Inter, Syne } from 'next/font/google'
 import './globals.css'
 import CustomCursor from '@/components/CustomCursor'
 import MouseGlow from '@/components/MouseGlow'
+import Preloader from '@/components/Preloader'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${syne.variable}`}>
       <body>
+        <Preloader />
         <CustomCursor />
         <MouseGlow />
         {children}

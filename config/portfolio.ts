@@ -291,6 +291,41 @@ export const tableauSyntheseConfig = {
   xlsxPath: '/assets/docs/E5-Tableaudesynthese.xlsx',
 }
 
+export const certificationsConfig = [
+  {
+    name: 'Introduction to Cybersecurity',
+    issuer: 'Cisco',
+    year: '2024',
+    color: 'from-blue-400 to-cyan-400',
+    accent: '#22d3ee',
+    url: '#',
+  },
+  {
+    name: 'Introduction to IoT',
+    issuer: 'Cisco',
+    year: '2024',
+    color: 'from-indigo-400 to-blue-400',
+    accent: '#818cf8',
+    url: '#',
+  },
+  {
+    name: 'Développeur Web',
+    issuer: 'OpenClassrooms',
+    year: '2023',
+    color: 'from-purple-400 to-pink-400',
+    accent: '#c084fc',
+    url: '#',
+  },
+  {
+    name: 'Git & GitHub',
+    issuer: 'OpenClassrooms',
+    year: '2023',
+    color: 'from-emerald-400 to-teal-400',
+    accent: '#34d399',
+    url: '#',
+  },
+]
+
 export const socialLinks = [
   { name: 'GitHub', url: 'https://github.com/Selim-usenmez', icon: 'github' },
   { name: 'LinkedIn', url: 'https://linkedin.com/in/selim-usenmez', icon: 'linkedin' },
