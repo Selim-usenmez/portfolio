@@ -4,39 +4,20 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { skillsConfig } from '@/config/portfolio'
 
-function ProgressBar({ pct, color, delay }: { pct: number; color: string; delay: number }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          whileInView={{ width: `${pct}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay, ease: 'easeOut' }}
-          className={`h-full rounded-full bg-gradient-to-r ${color}`}
-        />
-      </div>
-      <span className="text-xs text-text-2 w-8 text-right">{pct}%</span>
-    </div>
-  )
-}
-
 function SkillCard({
   category,
   index,
+  sectionInView,
 }: {
   category: (typeof skillsConfig.categories)[0]
   index: number
+  sectionInView: boolean
 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={sectionInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group relative glass rounded-3xl p-7 border border-white/5 hover:border-white/10 transition-all duration-500 overflow-hidden"
     >
       {/* Glow */}
@@ -45,29 +26,30 @@ function SkillCard({
       />
 
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <motion.span
-          className="text-xl inline-block"
-          initial={{ scale: 0, rotate: -20 }}
-          animate={inView ? { scale: 1, rotate: 0 } : {}}
-          transition={{ type: 'spring', stiffness: 400, damping: 12, delay: index * 0.1 + 0.15 }}
-        >
-          {category.icon}
-        </motion.span>
+      <div className="flex items-center gap-3 mb-5">
+        <span className="text-xl">{category.icon}</span>
         <h3 className={`font-display font-bold text-sm tracking-widest uppercase bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}>
           {category.name}
         </h3>
       </div>
 
-      {/* Skills with progress bars */}
+      {/* Skills as usage chips + description */}
       <div className="space-y-4">
-        {category.items.map((skill, i) => (
+        {category.items.map((skill) => (
           <div key={skill.name}>
-            <div className="flex items-start justify-between mb-1.5">
-              <span className="text-sm font-medium text-text-1">{skill.name}</span>
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span
+                className="px-2.5 py-1 rounded-full text-xs font-medium border"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  borderColor: 'rgba(255,255,255,0.1)',
+                  color: '#f1f5f9',
+                }}
+              >
+                {skill.name}
+              </span>
             </div>
-            <ProgressBar pct={skill.pct} color={category.color} delay={index * 0.1 + i * 0.1 + 0.2} />
-            <p className="text-xs text-text-2 mt-1.5 leading-relaxed">{skill.desc}</p>
+            <p className="text-xs text-text-2 leading-relaxed">{skill.desc}</p>
           </div>
         ))}
       </div>
@@ -117,7 +99,7 @@ export default function Skills() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {skillsConfig.categories.map((cat, i) => (
-            <SkillCard key={cat.name} category={cat} index={i} />
+            <SkillCard key={cat.name} category={cat} index={i} sectionInView={inView} />
           ))}
         </div>
       </div>

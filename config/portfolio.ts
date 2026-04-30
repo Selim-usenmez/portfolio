@@ -10,14 +10,14 @@ export const siteConfig = {
     'Développeur Web Full Stack',
     'Étudiant BTS SIO SLAM',
     'Passionné d\'IA & Technologies',
-    'Futur Ingénieur IA',
+    'Futur Ingénieur en Développement Logiciel & IA',
   ],
-  tagline: 'Passionné par le développement et les nouvelles technologies, je vise à devenir ingénieur en intelligence artificielle.',
+  tagline: 'Étudiant en BTS SIO SLAM, souhaitant intégrer CPE Lyon afin de devenir ingénieur en développement logiciel et intelligence artificielle.',
   email: 'usenmezselim@gmail.com',
   location: 'Lyon, France',
   school: 'Institution Les Chartreux, Lyon',
   availableForWork: true,
-  cvPath: '/assets/cv/CV_Usenmez_Selim_1745076542.pdf',
+  cvPath: '/assets/cv/CV_Usenmez_Selim_2026.pdf',
 }
 
 export const aboutConfig = {
@@ -33,46 +33,64 @@ export const aboutConfig = {
   ],
   formations: [
     {
-      periode: '2023–2025',
+      periode: '2023–2026',
       diplome: 'BTS SIO SLAM',
-      etablissement: 'Institution Les Chartreux, Lyon',
+      etablissement: 'Sup Alta Les Chartreux, Lyon',
       current: true,
     },
     {
       periode: '2022–2023',
-      diplome: 'Bac Pro SN RISC',
+      diplome: 'Terminale Pro Système Numérique RISC',
       etablissement: 'École La Mache, Lyon',
       current: false,
     },
     {
-      periode: '2020–2022',
-      diplome: '1ère et 2nde SN RISC',
+      periode: '2021–2022',
+      diplome: '1ère Pro Système Numérique RISC',
+      etablissement: 'École La Mache, Lyon',
+      current: false,
+    },
+    {
+      periode: '2020–2021',
+      diplome: '2nde Pro Système Numérique RISC',
       etablissement: 'École La Mache, Lyon',
       current: false,
     },
   ],
   experiences: [
     {
-      periode: 'Mai – Juin 2024',
+      periode: 'Fév. – Avr. 2026',
+      poste: 'Stage Développeur Web — Kalitys, Villeurbanne',
+      missions: ['Création et modification de pages web', 'Tests, correction de bugs et amélioration de fonctionnalités'],
+      color: 'from-violet-400 to-indigo-400',
+    },
+    {
+      periode: 'Juin – Juil. 2024',
       poste: 'Stage — ABD Réseaux, Vénissieux',
       missions: ['Fibre optique : raccordement maison, dépannage'],
       color: 'from-indigo-400 to-purple-400',
     },
     {
-      periode: 'Juin – Juil. 2023',
+      periode: 'Mai – Juin 2023',
       poste: 'Stage — ABD Réseaux, Vénissieux',
-      missions: ['Fibre optique : dépannage, raccordement'],
+      missions: ['Fibre optique : raccordement maison, dépannage'],
       color: 'from-cyan-400 to-blue-400',
     },
     {
-      periode: 'Mai – Juin 2023',
-      poste: 'Stage — Slyatech, Vénissieux',
-      missions: ['Plan informatique, serveurs (HaneDan), PIG Vision'],
+      periode: 'Mai – Juin 2022',
+      poste: 'Stage — Sylatech, Vénissieux',
+      missions: ['Fibre optique : raccordement maison, dépannage'],
       color: 'from-emerald-400 to-teal-400',
     },
     {
-      periode: '2020',
-      poste: 'Maxi Market, Saint-Fons',
+      periode: 'Mars 2021',
+      poste: 'Stage — Sylatech, Vénissieux',
+      missions: ['Fibre optique : raccordement maison, dépannage'],
+      color: 'from-amber-400 to-orange-400',
+    },
+    {
+      periode: 'Mars 2020',
+      poste: 'Stage — Maxi Market, Saint-Fons',
       missions: ['Vente, mise en rayon'],
       color: 'from-pink-400 to-rose-400',
     },
@@ -243,7 +261,7 @@ export const tableauSyntheseConfig = {
       icon: '📘',
       projects: [
         {
-          nom: 'Formulaire de contrat web',
+          nom: 'Formulaire de contact web',
           competences: { gerer_si: true, incidents: false, web: false, projet: false, deploiement: false, dev_pro: false },
           preuve: '/assets/docs/preuve1gerersi.pdf',
         },
@@ -262,11 +280,6 @@ export const tableauSyntheseConfig = {
           competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: true, dev_pro: false },
           preuve: '/assets/docs/preuvesurdeployment.pdf',
         },
-        {
-          nom: 'Projet personnel (certification)',
-          competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: false, dev_pro: true },
-          preuve: '/assets/docs/preuvesurdevpro.pdf',
-        },
       ],
     },
     {
@@ -275,7 +288,7 @@ export const tableauSyntheseConfig = {
       projects: [
         {
           nom: 'Installation fibre optique',
-          competences: { gerer_si: false, incidents: false, web: false, projet: true, deploiement: false, dev_pro: false },
+          competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: false, dev_pro: true },
           preuve: '/assets/docs/preuvesurprojet.pdf',
         },
       ],
@@ -283,12 +296,17 @@ export const tableauSyntheseConfig = {
     {
       title: 'Réalisations en milieu professionnel — 2e année',
       icon: '🏁',
-      pending: true,
-      projects: [],
+      projects: [
+        {
+          nom: 'Projet notice rouge Kalitys',
+          competences: { gerer_si: false, incidents: false, web: false, projet: true, deploiement: false, dev_pro: false },
+          preuve: null,
+        },
+      ],
     },
   ],
-  pdfPath: '/assets/docs/E5-Tableaudesynthese.pdf',
-  xlsxPath: '/assets/docs/E5-Tableaudesynthese.xlsx',
+  pdfPath: '/assets/docs/E5-Tableaudesynthese2p.pdf',
+  xlsxPath: '/assets/docs/E5-Tableaudesynthese2.xlsx',
 }
 
 export const certificationsConfig = [

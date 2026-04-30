@@ -18,9 +18,6 @@ function ViewExcel() {
             <span className="text-lg">{section.icon}</span>
             <h3 className="font-display font-semibold text-text-1 text-lg">
               {section.title}
-              {section.pending && (
-                <span className="ml-3 text-xs text-rose-400 font-normal italic">(pas encore réalisé)</span>
-              )}
             </h3>
           </div>
 
@@ -42,7 +39,7 @@ function ViewExcel() {
                 </tr>
               </thead>
               <tbody>
-                {section.pending || section.projects.length === 0 ? (
+                {section.projects.length === 0 ? (
                   <tr className="border-b border-white/5 last:border-0">
                     <td className="px-5 py-4 text-text-2 italic">À venir…</td>
                     {competenceHeaders.map((h) => (
@@ -60,7 +57,7 @@ function ViewExcel() {
                         const isActive = project.competences[h.key as CompKey]
                         return (
                           <td key={h.key} className="px-4 py-4 text-center">
-                            {isActive ? (
+                            {isActive && project.preuve ? (
                               <a
                                 href={project.preuve}
                                 target="_blank"
@@ -72,6 +69,12 @@ function ViewExcel() {
                                   <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                               </a>
+                            ) : isActive ? (
+                              <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-accent/10 border border-accent/20 text-accent/60">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                  <path d="M2 6L5 9L10 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                              </span>
                             ) : (
                               <span className="inline-block w-4 h-px bg-white/10 mx-auto" />
                             )}
@@ -172,9 +175,6 @@ function ViewStyled() {
               <h3 className="font-display font-semibold text-text-1">
                 {section.title}
               </h3>
-              {section.pending && (
-                <span className="text-xs bg-rose-400/10 text-rose-400 border border-rose-400/20 px-2 py-0.5 rounded-full">À venir</span>
-              )}
             </div>
 
             {section.projects.length === 0 ? (
@@ -185,17 +185,21 @@ function ViewStyled() {
                   const activeComps = competenceHeaders.filter(h => project.competences[h.key as CompKey])
                   return (
                     <div key={pi} className="flex flex-wrap items-center gap-3 py-3 border-b border-white/5 last:border-0">
-                      <a
-                        href={project.preuve}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-sm text-text-1 hover:text-accent transition-colors flex items-center gap-2 group"
-                      >
-                        {project.nom}
-                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </a>
+                      {project.preuve ? (
+                        <a
+                          href={project.preuve}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-sm text-text-1 hover:text-accent transition-colors flex items-center gap-2 group"
+                        >
+                          {project.nom}
+                          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="font-medium text-sm text-text-1">{project.nom}</span>
+                      )}
                       <div className="flex flex-wrap gap-1.5 ml-auto">
                         {activeComps.map((h) => (
                           <span

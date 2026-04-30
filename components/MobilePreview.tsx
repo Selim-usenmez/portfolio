@@ -14,7 +14,6 @@ const SCREENSHOTS: string[] = [
   '/assets/screenshots/IMG_2587.jpg',
   '/assets/screenshots/IMG_2588.jpg',
   '/assets/screenshots/IMG_2589.jpg',
-  '/assets/screenshots/IMG_2590.jpg',
 ]
 
 /* ── Placeholder UI (tant qu'il n'y a pas de screenshots) ─────── */

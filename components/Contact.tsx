@@ -3,6 +3,102 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { siteConfig, socialLinks } from '@/config/portfolio'
+import MagneticButton from '@/components/MagneticButton'
+
+/* ── Canvas confetti ────────────────────────────────────────── */
+function fireConfetti() {
+  const canvas = document.createElement('canvas')
+  canvas.style.cssText =
+    'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999'
+  document.body.appendChild(canvas)
+  const ctx = canvas.getContext('2d')
+  if (!ctx) { canvas.remove(); return }
+
+  canvas.width = window.innerWidth
+  canvas.height = window.innerHeight
+
+  type Particle = {
+    x: number; y: number; vx: number; vy: number
+    color: string; w: number; h: number
+    rotation: number; rotSpeed: number
+    gravity: number; life: number; decay: number
+  }
+
+  const COLORS = ['#818cf8', '#c084fc', '#22d3ee', '#f472b6', '#4ade80', '#fbbf24']
+  const particles: Particle[] = []
+
+  // Burst from bottom-center
+  const cx = canvas.width / 2
+  const cy = canvas.height * 0.75
+
+  for (let i = 0; i < 100; i++) {
+    const angle = (Math.random() * Math.PI * 1.4) - Math.PI * 0.7 - Math.PI / 2
+    const speed = Math.random() * 14 + 6
+    particles.push({
+      x: cx,
+      y: cy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 5 + 3,
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 10,
+      gravity: 0.35 + Math.random() * 0.2,
+      life: 1,
+      decay: Math.random() * 0.012 + 0.008,
+    })
+  }
+
+  let rafId: number
+  const animate = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    let alive = false
+    for (const p of particles) {
+      p.x += p.vx
+      p.y += p.vy
+      p.vy += p.gravity
+      p.vx *= 0.99
+      p.rotation += p.rotSpeed
+      p.life -= p.decay
+      if (p.life > 0) {
+        alive = true
+        ctx.save()
+        ctx.globalAlpha = Math.max(0, p.life)
+        ctx.fillStyle = p.color
+        ctx.translate(p.x, p.y)
+        ctx.rotate((p.rotation * Math.PI) / 180)
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
+        ctx.restore()
+      }
+    }
+    if (alive) {
+      rafId = requestAnimationFrame(animate)
+    } else {
+      cancelAnimationFrame(rafId)
+      canvas.remove()
+    }
+  }
+  animate()
+}
+
+/* ── Ripple on click ────────────────────────────────────────── */
+function createRipple(e: React.MouseEvent<HTMLButtonElement>) {
+  const btn = e.currentTarget
+  const existing = btn.querySelector('.ripple-wave')
+  if (existing) existing.remove()
+
+  const circle = document.createElement('span')
+  const diameter = Math.max(btn.clientWidth, btn.clientHeight)
+  const radius = diameter / 2
+  const rect = btn.getBoundingClientRect()
+
+  circle.style.width = circle.style.height = `${diameter}px`
+  circle.style.left = `${e.clientX - rect.left - radius}px`
+  circle.style.top = `${e.clientY - rect.top - radius}px`
+  circle.classList.add('ripple-wave')
+  btn.appendChild(circle)
+}
 
 /* ── Social icon map ────────────────────────────────────────── */
 function SocialIcon({ name }: { name: string }) {
@@ -16,7 +112,7 @@ function SocialIcon({ name }: { name: string }) {
     case 'linkedin':
       return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
         </svg>
       )
     case 'twitter':
@@ -38,43 +134,31 @@ function MagneticSocial({
   link: { name: string; url: string; icon: string }
   delay: number
 }) {
-  const ref = useRef<HTMLAnchorElement>(null)
-  const inView = useInView(ref, { once: true })
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 20
-    ref.current.style.transform = `translate(${x}px, ${y}px)`
-    ref.current.style.transition = 'transform 0.1s ease'
-  }
-
-  const handleMouseLeave = () => {
-    if (!ref.current) return
-    ref.current.style.transform = 'translate(0, 0)'
-    ref.current.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-  }
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref as React.RefObject<Element>, { once: true })
 
   return (
-    <motion.a
+    <motion.div
       ref={ref}
-      href={link.url}
-      target="_blank"
-      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group flex items-center gap-3 px-5 py-3 glass rounded-xl border border-white/5 hover:border-accent/30 text-text-2 hover:text-text-1 transition-colors duration-300"
-      aria-label={link.name}
     >
-      <span className="text-accent group-hover:text-accent-2 transition-colors duration-200">
-        <SocialIcon name={link.icon} />
-      </span>
-      <span className="text-sm">{link.name}</span>
-    </motion.a>
+      <MagneticButton strength={0.3}>
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 px-5 py-3 glass rounded-xl border border-white/5 hover:border-accent/30 text-text-2 hover:text-text-1 transition-colors duration-300"
+          aria-label={link.name}
+        >
+          <span className="text-accent group-hover:text-accent-2 transition-colors duration-200">
+            <SocialIcon name={link.icon} />
+          </span>
+          <span className="text-sm">{link.name}</span>
+        </a>
+      </MagneticButton>
+    </motion.div>
   )
 }
 
@@ -103,7 +187,6 @@ function ContactForm() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<FormStatus>('idle')
-  // Anti-bot: timestamp de chargement du formulaire
   const [loadedAt, setLoadedAt] = useState<number>(0)
 
   useEffect(() => {
@@ -122,7 +205,7 @@ function ContactForm() {
           name,
           email,
           message,
-          website: '', // honeypot — doit rester vide
+          website: '',
           _t: loadedAt,
         }),
       })
@@ -132,7 +215,8 @@ function ContactForm() {
         setName('')
         setEmail('')
         setMessage('')
-        setTimeout(() => setStatus('idle'), 5000)
+        fireConfetti()
+        setTimeout(() => setStatus('idle'), 6000)
       } else {
         setStatus('error')
         setTimeout(() => setStatus('idle'), 4000)
@@ -148,10 +232,8 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto mt-10">
-      {/* Carte glass */}
       <div className="glass rounded-2xl border border-white/5 p-6 sm:p-8 space-y-5 shadow-xl shadow-black/20">
-
-        {/* Champ honeypot — invisible pour les humains, les bots le remplissent */}
+        {/* Honeypot */}
         <input
           type="text"
           name="website"
@@ -198,31 +280,35 @@ function ContactForm() {
           />
         </Field>
 
-        <button
-          type="submit"
-          disabled={status === 'sending'}
-          className="group w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 bg-accent/15 border border-accent/25 text-accent hover:bg-accent/25 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {status === 'sending' ? (
-            <>
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-              </svg>
-              Envoi en cours…
-            </>
-          ) : (
-            <>
-              Envoyer le message
-              <svg
-                className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                viewBox="0 0 16 16" fill="none"
-              >
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </>
-          )}
-        </button>
+        {/* Submit — ripple + magnetic */}
+        <MagneticButton strength={0.15} className="w-full">
+          <button
+            type="submit"
+            disabled={status === 'sending'}
+            onClick={createRipple}
+            className="ripple-container group w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 bg-accent/15 border border-accent/25 text-accent hover:bg-accent/25 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {status === 'sending' ? (
+              <>
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                </svg>
+                Envoi en cours…
+              </>
+            ) : (
+              <>
+                Envoyer le message
+                <svg
+                  className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                  viewBox="0 0 16 16" fill="none"
+                >
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </>
+            )}
+          </button>
+        </MagneticButton>
 
         {status === 'success' && (
           <motion.div
@@ -266,18 +352,16 @@ export default function Contact() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // fallback: do nothing
+      // fallback
     }
   }
 
   return (
     <section id="contact" ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Large aurora blob */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(99,102,241,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(99,102,241,0.1) 0%, transparent 70%)',
         }}
       />
 
@@ -302,8 +386,7 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-display font-bold text-5xl md:text-7xl lg:text-8xl text-text-1 leading-tight"
           >
-            Parlons
-            {' '}
+            Parlons{' '}
             <span className="gradient-text-shimmer">ensemble</span>
           </motion.h2>
         </div>
@@ -332,22 +415,24 @@ export default function Contact() {
             >
               {siteConfig.email}
             </a>
-            <button
-              onClick={copyEmail}
-              className="p-2 glass rounded-lg border border-white/5 hover:border-accent/30 text-text-2 hover:text-accent transition-all duration-200"
-              title="Copier l'email"
-            >
-              {copied ? (
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8L6.5 11.5L13 4.5" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
-                  <path d="M11 5V4C11 3.17 10.33 2.5 9.5 2.5H4C3.17 2.5 2.5 3.17 2.5 4V9.5C2.5 10.33 3.17 11 4 11H5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                </svg>
-              )}
-            </button>
+            <MagneticButton strength={0.5}>
+              <button
+                onClick={copyEmail}
+                className="p-2 glass rounded-lg border border-white/5 hover:border-accent/30 text-text-2 hover:text-accent transition-all duration-200"
+                title="Copier l'email"
+              >
+                {copied ? (
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8L6.5 11.5L13 4.5" stroke="#4ade80" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.2"/>
+                    <path d="M11 5V4C11 3.17 10.33 2.5 9.5 2.5H4C3.17 2.5 2.5 3.17 2.5 4V9.5C2.5 10.33 3.17 11 4 11H5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                  </svg>
+                )}
+              </button>
+            </MagneticButton>
           </div>
         </motion.div>
 

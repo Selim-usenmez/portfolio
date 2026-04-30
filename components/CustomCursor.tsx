@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
+/* ── Main cursor ────────────────────────────────────────────── */
 export default function CustomCursor() {
   const dotX = useMotionValue(-100)
   const dotY = useMotionValue(-100)
@@ -64,7 +65,6 @@ export default function CustomCursor() {
     window.addEventListener('mousemove', onMove)
     addHoverListeners()
 
-    // Re-scan after hydration for dynamic elements
     const observer = new MutationObserver(addHoverListeners)
     observer.observe(document.body, { childList: true, subtree: true })
 
