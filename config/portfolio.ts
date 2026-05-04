@@ -283,7 +283,7 @@ export const tableauSyntheseConfig = {
         {
           nom: 'Projet web (NexusPharm)',
           competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: false, dev_pro: true },
-          preuve: null,
+          preuve: '/assets/docs/preuve_projet_NexusPharm.pdf',
         },
       ],
     },
@@ -305,8 +305,9 @@ export const tableauSyntheseConfig = {
         {
           nom: 'Projet notice rouge Kalitys',
           competences: { gerer_si: false, incidents: false, web: false, projet: true, deploiement: false, dev_pro: false },
-          preuve: null,
+          preuve: '/assets/docs/preuve_projet_NoticeRouge_Kalitys (1).pdf',
         },
+        
         {
           nom: 'Améliorer le ranking d\'un client (positionnement)',
           competences: { gerer_si: false, incidents: false, web: true, projet: false, deploiement: false, dev_pro: false },
