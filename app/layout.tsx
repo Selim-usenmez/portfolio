@@ -1,20 +1,22 @@
 import type { Metadata } from 'next'
-import { Inter, Syne } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import CustomCursor from '@/components/CustomCursor'
 import MouseGlow from '@/components/MouseGlow'
 import Preloader from '@/components/Preloader'
 
-const inter = Inter({
-  subsets: ['latin'],
+const inter = localFont({
+  src: '../public/assets/fonts/inter-variable.woff2',
   variable: '--font-inter',
   display: 'swap',
+  weight: '100 900',
 })
 
-const syne = Syne({
-  subsets: ['latin'],
+const syne = localFont({
+  src: '../public/assets/fonts/syne-variable.woff2',
   variable: '--font-syne',
   display: 'swap',
+  weight: '400 800',
 })
 
 export const metadata: Metadata = {

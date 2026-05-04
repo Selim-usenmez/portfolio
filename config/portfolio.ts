@@ -261,12 +261,12 @@ export const tableauSyntheseConfig = {
       icon: '📘',
       projects: [
         {
-          nom: 'Formulaire de contact web',
+          nom: 'Formulaire de contrat web',
           competences: { gerer_si: true, incidents: false, web: false, projet: false, deploiement: false, dev_pro: false },
           preuve: '/assets/docs/preuve1gerersi.pdf',
         },
         {
-          nom: 'TP Dev Présence en Ligne (Beyond Bliss)',
+          nom: 'TP Dev Présence en Ligne (BeyondBliss)',
           competences: { gerer_si: false, incidents: false, web: true, projet: false, deploiement: false, dev_pro: false },
           preuve: '/assets/docs/preuve2web.pdf',
         },
@@ -276,9 +276,14 @@ export const tableauSyntheseConfig = {
           preuve: '/assets/docs/preuve4incident.pdf',
         },
         {
-          nom: 'Projet Portfolio',
+          nom: 'Projet Mobile (NexusSport)',
           competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: true, dev_pro: false },
-          preuve: '/assets/docs/preuvesurdeployment.pdf',
+          preuve: null,
+        },
+        {
+          nom: 'Projet web (NexusPharm)',
+          competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: false, dev_pro: true },
+          preuve: null,
         },
       ],
     },
@@ -302,11 +307,16 @@ export const tableauSyntheseConfig = {
           competences: { gerer_si: false, incidents: false, web: false, projet: true, deploiement: false, dev_pro: false },
           preuve: null,
         },
+        {
+          nom: 'Améliorer le ranking d\'un client (positionnement)',
+          competences: { gerer_si: false, incidents: false, web: true, projet: false, deploiement: false, dev_pro: false },
+          preuve: null,
+        },
       ],
     },
   ],
-  pdfPath: '/assets/docs/E5-Tableaudesynthese2p.pdf',
-  xlsxPath: '/assets/docs/E5-Tableaudesynthese2.xlsx',
+  pdfPath: '/assets/docs/E5-Tableaudesynthese3.pdf',
+  xlsxPath: '/assets/docs/E5-Tableaudesynthese3.xlsx',
 }
 
 export const certificationsConfig = [
