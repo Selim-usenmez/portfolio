@@ -293,7 +293,7 @@ export const tableauSyntheseConfig = {
       projects: [
         {
           nom: 'Installation fibre optique',
-          competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: false, dev_pro: true },
+          competences: { gerer_si: false, incidents: false, web: false, projet: true, deploiement: false, dev_pro: false },
           preuve: '/assets/docs/preuvesurprojet.pdf',
         },
       ],
@@ -315,8 +315,8 @@ export const tableauSyntheseConfig = {
       ],
     },
   ],
-  pdfPath: '/assets/docs/E5-Tableaudesynthese3.pdf',
-  xlsxPath: '/assets/docs/E5-Tableaudesynthese3.xlsx',
+  pdfPath: '/assets/docs/E5-Tableaudesynthese4.pdf',
+  xlsxPath: '/assets/docs/E5-Tableaudesynthese4.xlsx',
 }
 
 export const certificationsConfig = [
