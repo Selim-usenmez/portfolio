@@ -278,7 +278,7 @@ export const tableauSyntheseConfig = {
         {
           nom: 'Projet Mobile (NexusSport)',
           competences: { gerer_si: false, incidents: false, web: false, projet: false, deploiement: true, dev_pro: false },
-          preuve: null,
+          preuve: '/assets/docs/preuve_projet_NexusSport.pdf',
         },
         {
           nom: 'Projet web (NexusPharm)',
@@ -310,7 +310,8 @@ export const tableauSyntheseConfig = {
         {
           nom: 'Améliorer le ranking d\'un client (positionnement)',
           competences: { gerer_si: false, incidents: false, web: true, projet: false, deploiement: false, dev_pro: false },
-          preuve: null,
+          preuve: '/assets/docs/preuve_projet_Ranking_Kalitys.pdf',
+         
         },
       ],
     },
